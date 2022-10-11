@@ -1,14 +1,20 @@
 console.log("test");
 
-function setValue() {
-  let data = document.getElementById("MachineState");
+function setValues() {
+  setValue("scaleValue");
+  setValue("machineState");
+  setTimeout("setValues();", 1000);
+}
+
+function setValue(valueName) {
+  let data = document.getElementById(valueName);
   var req = new XMLHttpRequest();
-  req.open("GET", "/api/ledStatus", false);
+  let url = "/api/".concat(valueName);
+  req.open("GET", url, false);
   req.send(null);
   if (req.status == 200) data.textContent = req.responseText;
-  setTimeout("setValue();", 1000);
 }
 
 window.onload = function () {
-    setValue();
+  setValues();
 };
