@@ -32,10 +32,10 @@ void setup()
   Serial.println(WiFi.localIP());
 
   server.on("/", HTTP_GET, [](AsyncWebServerRequest *request)
-            { request->send(SPIFFS, "/home.html", "text/html"); });
+            { request->send(SPIFFS, "/index.html", "text/html"); });
 
   server.on("/gatherData.js", HTTP_GET, [](AsyncWebServerRequest *request)
-            { request->send(SPIFFS, "/gatherData.js", "text/html"); });
+            { request->send(SPIFFS, "/gatherData.js", "text/JavaScript"); });
 
   server.on("/api/toggleLed", HTTP_GET, [](AsyncWebServerRequest *request)
             {
