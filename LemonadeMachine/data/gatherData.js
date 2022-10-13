@@ -15,6 +15,15 @@ function setValue(valueName) {
   if (req.status == 200) data.textContent = req.responseText;
 }
 
+function makeLemonadeRequest(type)
+{
+  var req = new XMLHttpRequest();
+  let url = "/api/makeLemonade?lemonade=".concat(type);
+  req.open("GET", url, false);
+  req.send(null);
+  if (req.status == 200) console.log(req.responseText);
+}
+
 window.onload = function () {
   setValues();
 };
