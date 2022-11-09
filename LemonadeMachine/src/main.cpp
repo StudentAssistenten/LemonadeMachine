@@ -17,6 +17,9 @@ AsyncWebServer server(80);
 #define RELAIS_OFFSET 25
 #define WATER_PUMP 33
 #define ONBOARD_LED 2
+#define RGB_RED 23
+#define RGB_GREEN 22
+#define RGB_BLUE 21
 
 enum lemonadeState_t
 {
@@ -33,29 +36,26 @@ enum lemonadeFlavour_t
     BOSVRUCHTEN
 };
 
+enum color_t
+{
+    RED,
+    GREEN,
+    BLUE,
+    YELLOW,
+    WHITE
+};
+
 lemonadeState_t lemonadeState = IDLE;
 lemonadeFlavour_t lemonadeFlavour = LEMON;
 
 void queueLemonade(AsyncWebServerRequest *request);
+void colorRGB(color_t color);
+void BSPInit();
 
 void setup()
 {
-    Serial.begin(115200);
-    pinMode(ONBOARD_LED, OUTPUT);
-    pinMode(25, OUTPUT);
-    pinMode(26, OUTPUT);
-    pinMode(27, OUTPUT);
-    pinMode(33, OUTPUT);
-
-
+    BSPInit();
     digitalWrite(ONBOARD_LED, HIGH);
-
-    Serial.println("Scale setup");
-    scale.begin(LOADCELL_DOUT_PIN, LOADCELL_SCK_PIN);
-    scale.set_scale();
-    scale.tare();                        // Reset the scale to 0
-    scale.set_scale(CALIBRATION_FACTOR); // Adjust to this calibration factor
-    Serial.println(scale.get_units(), 3);
 
     if (!SPIFFS.begin())
     {
@@ -71,6 +71,7 @@ void setup()
         Serial.println("Connecting to WiFi..");
         digitalWrite(ONBOARD_LED, !digitalRead(ONBOARD_LED));
     }
+    colorRGB(GREEN);
     digitalWrite(ONBOARD_LED, HIGH);
     Serial.println(WiFi.localIP());
 
@@ -106,26 +107,29 @@ void loop()
     {
         lemonadeState = FLAVORING;
         scale.tare(); // Reset the scale to 0
+        colorRGB(WHITE);
         digitalWrite(RELAIS_OFFSET + lemonadeFlavour, HIGH);
     }
     else if (lemonadeState == FLAVORING)
     {
         Serial.print("Flavoring: ");
         Serial.println(scale.get_units());
-        if (scale.get_units() > 0.03) // todo: make it a difference in weight instead of an constant
+        if (scale.get_units() > 0.005) // todo: make it a difference in weight instead of an constant
         {
             lemonadeState = WATERING;
             digitalWrite(RELAIS_OFFSET + lemonadeFlavour, LOW);
+            colorRGB(BLUE);
         }
     }
     else if (lemonadeState == WATERING)
     {
         Serial.print("Watering: ");
         Serial.println(scale.get_units());
-        if (scale.get_units() > 0.150) // todo: make it a difference in weight instead of an constant
+        if (scale.get_units() > 0.130) // todo: make it a difference in weight instead of an constant
         {
             lemonadeState = IDLE;
             digitalWrite(WATER_PUMP, LOW);
+            colorRGB(GREEN);
         }
         else
         {
@@ -140,5 +144,59 @@ void queueLemonade(AsyncWebServerRequest *request)
     {
         lemonadeState = QUEUED;
         lemonadeFlavour = (lemonadeFlavour_t)request->getParam("lemonade")->value().toInt();
+    }
+}
+
+void BSPInit()
+{
+    Serial.begin(115200);
+    pinMode(ONBOARD_LED, OUTPUT);
+    pinMode(25, OUTPUT);
+    pinMode(26, OUTPUT);
+    pinMode(27, OUTPUT);
+    pinMode(33, OUTPUT);
+    pinMode(RGB_RED, OUTPUT);
+    pinMode(RGB_GREEN, OUTPUT);
+    pinMode(RGB_BLUE, OUTPUT);
+
+    colorRGB(RED);
+
+    Serial.println("Scale setup");
+    scale.begin(LOADCELL_DOUT_PIN, LOADCELL_SCK_PIN);
+    scale.set_scale();
+    scale.tare();                        // Reset the scale to 0
+    scale.set_scale(CALIBRATION_FACTOR); // Adjust to this calibration factor
+    Serial.println(scale.get_units(), 3);
+}
+
+void colorRGB(color_t color)
+{
+    switch (color)
+    {
+    case RED:
+        digitalWrite(RGB_RED, HIGH);
+        digitalWrite(RGB_GREEN, LOW);
+        digitalWrite(RGB_BLUE, LOW);
+        break;
+    case GREEN:
+        digitalWrite(RGB_RED, LOW);
+        digitalWrite(RGB_GREEN, HIGH);
+        digitalWrite(RGB_BLUE, LOW);
+        break;
+    case BLUE:
+        digitalWrite(RGB_RED, LOW);
+        digitalWrite(RGB_GREEN, LOW);
+        digitalWrite(RGB_BLUE, HIGH);
+        break;
+    case YELLOW:
+        digitalWrite(RGB_RED, HIGH);
+        digitalWrite(RGB_GREEN, HIGH);
+        digitalWrite(RGB_BLUE, LOW);
+        break;
+    case WHITE:
+        digitalWrite(RGB_RED, HIGH);
+        digitalWrite(RGB_GREEN, HIGH);
+        digitalWrite(RGB_BLUE, HIGH);
+        break;
     }
 }
