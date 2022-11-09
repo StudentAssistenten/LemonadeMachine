@@ -1,10 +1,16 @@
 #include "lemonade.h"
 
-lemonadeState_t lemonadeState;
-lemonadeFlavour_t lemonadeFlavour;
+lemonadeState_t lemonadeState = IDLE;
+lemonadeFlavour_t lemonadeFlavour = LEMON;
+float sweetenesAmount = 0.0;
+float currentWeight = 0;
+
+#define BASE_SWEETNESS 0.014
+#define TOTAL_LIQUID 0.130
 
 void handleLemonadeMachine()
 {
+    currentWeight = scale.get_units();
     if (lemonadeState == QUEUED)
     {
         lemonadeState = FLAVORING;
@@ -15,27 +21,24 @@ void handleLemonadeMachine()
     else if (lemonadeState == FLAVORING)
     {
         Serial.print("Flavoring: ");
-        Serial.println(scale.get_units());
-        if (scale.get_units() > 0.005) // todo: make it a difference in weight instead of an constant
+        Serial.println(currentWeight);
+        if (currentWeight > 0.014) // TODO: make this value dependant of site input (0.007 is ideal sweetness)
         {
             lemonadeState = WATERING;
             digitalWrite(RELAIS_OFFSET + lemonadeFlavour, LOW);
+            digitalWrite(WATER_PUMP, HIGH);
             colorRGB(BLUE);
         }
     }
     else if (lemonadeState == WATERING)
     {
         Serial.print("Watering: ");
-        Serial.println(scale.get_units());
-        if (scale.get_units() > 0.130) // todo: make it a difference in weight instead of an constant
+        Serial.println(currentWeight);
+        if (currentWeight > (TOTAL_LIQUID)) // TODO: make this value dependant of site input
         {
             lemonadeState = IDLE;
             digitalWrite(WATER_PUMP, LOW);
             colorRGB(GREEN);
-        }
-        else
-        {
-            digitalWrite(WATER_PUMP, HIGH);
         }
     }
 }
@@ -46,6 +49,8 @@ void queueLemonade(AsyncWebServerRequest *request)
     {
         lemonadeState = QUEUED;
         lemonadeFlavour = (lemonadeFlavour_t)request->getParam("lemonade")->value().toInt();
+        sweetenesAmount = BASE_SWEETNESS * request->getParam("sweetness")->value().toFloat();
+        Serial.printf("Lemonade type %d queued, sweetness : %f", (uint8_t) lemonadeFlavour, sweetenesAmount);
     }
 }
 

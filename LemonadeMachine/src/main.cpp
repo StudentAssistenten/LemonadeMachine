@@ -23,6 +23,7 @@ void BSPInit()
     return;
   }
   WiFiInit();
+  serverInit();
   digitalWrite(ONBOARD_LED, HIGH);
   colorRGB(GREEN);
 }

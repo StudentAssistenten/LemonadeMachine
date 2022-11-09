@@ -11,4 +11,5 @@ void WiFiInit()
         Serial.println("Connecting to WiFi..");
         digitalWrite(ONBOARD_LED, !digitalRead(ONBOARD_LED));
     }
+    Serial.println(WiFi.localIP());
 }

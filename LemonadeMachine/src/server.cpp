@@ -6,8 +6,6 @@ AsyncWebServer server(80);
 
 void serverInit()
 {
-    Serial.println(WiFi.localIP());
-
     server.on("/", HTTP_GET, [](AsyncWebServerRequest *request)
               { request->send(SPIFFS, "/index.html", "text/html"); });
 

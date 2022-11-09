@@ -5,6 +5,7 @@
 #include "HX711.h"
 #include "lemonade.h"
 #include "RGBLed.h"
+#include "server.h"
 #include "scale.h"
 
 

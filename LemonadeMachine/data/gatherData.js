@@ -22,8 +22,9 @@ function setValue(valueName) {
 
 function makeLemonadeRequest(type)
 {
+  var sweetness = document.getElementById("lemonadeSweetness".concat(type)).value;
   var req = new XMLHttpRequest();
-  let url = "/api/makeLemonade?lemonade=".concat(type);
+  let url = "/api/makeLemonade?lemonade=".concat(type).concat("&sweetness=").concat(sweetness);
   req.open("GET", url, false);
   req.send(null);
   if (req.status == 200) console.log(req.responseText);
