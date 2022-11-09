@@ -22,7 +22,14 @@ function setValue(valueName) {
 
 function makeLemonadeRequest(type)
 {
-  var sweetness = document.getElementById("lemonadeSweetness".concat(type)).value;
+  var sweetness;
+  if(type == 3) {
+    type  = Math.floor(randomNumber(0, 3));
+    sweetness = Math.floor((Math.random() * 10) + 1) / 10;
+  } else {
+    sweetness = document.getElementById("lemonadeSweetness".concat(type)).value;
+  }
+  console.log("Making lemonade request type: " + type + " sweetness: " + sweetness);
   var req = new XMLHttpRequest();
   let url = "/api/makeLemonade?lemonade=".concat(type).concat("&sweetness=").concat(sweetness);
   req.open("GET", url, false);
@@ -37,3 +44,7 @@ function makeLemonadeRequest(type)
 window.onload = function () {
   setValues();
 };
+
+function randomNumber(min, max) { 
+  return Math.random() * (max - min) + min;
+} 
