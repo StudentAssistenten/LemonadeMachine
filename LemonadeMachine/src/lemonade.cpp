@@ -23,13 +23,13 @@ String getLemonadeFlavour()
     switch (lemonadeFlavour)
     {
     case LEMON:
-        return "LEMON";
+        return "Citroen";
         break;
     case STRAWBERRIE:
-        return "STRAWBERRIE";
+        return "Aardbei";
         break;
     case BOSVRUCHTEN:
-        return "BOSVRUCHTEN";
+        return "Bosvruchten";
         break;
     default:
         return "UNKNOWN";

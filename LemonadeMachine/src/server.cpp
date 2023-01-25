@@ -29,6 +29,34 @@ void serverInit()
                     request->send(200, "text/plain", "Not OK");
                 } });
 
+    server.on("/api/setPumpHigh", HTTP_GET, [](AsyncWebServerRequest *request)
+              { if(request->hasParam("pump"))
+                {
+                    int offset = request->getParam("pump")->value().toInt();
+                    if(offset > 0)
+                        digitalWrite(RELAIS_OFFSET + (offset - 1), HIGH);
+                    else
+                        digitalWrite(WATER_PUMP, HIGH);
+
+                    request->send(200, "text/plain", "OK");
+                } else {
+                    request->send(200, "text/plain", "Not OK");
+                } });
+
+    server.on("/api/setPumpLow", HTTP_GET, [](AsyncWebServerRequest *request)
+              { if(request->hasParam("pump"))
+                {
+                    int offset = request->getParam("pump")->value().toInt();
+                    if(offset > 0)
+                        digitalWrite(RELAIS_OFFSET + (offset - 1), LOW);
+                    else
+                        digitalWrite(WATER_PUMP, LOW);
+
+                    request->send(200, "text/plain", "OK");
+                } else {
+                    request->send(200, "text/plain", "Not OK");
+                } });
+
     // ------ Control
     server.on("/api/CurrentMachineState", HTTP_GET, [](AsyncWebServerRequest *request)
               { request->send(200, "text/plain", getLemonadeState()); });

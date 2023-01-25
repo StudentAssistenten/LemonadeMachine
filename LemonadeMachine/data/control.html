@@ -45,17 +45,17 @@
                         <li class="list-group-item">
                             <h3>Pomp controle</h3>
                         </li>
-                        <li class="list-group-item"><strong>Pomp 1 </strong> <button class="btn btn-success">On</button>
-                            <button class="btn btn-danger">Off</button>
+                        <li class="list-group-item"><strong>Pomp 1 </strong> <button class="btn btn-success" onclick="setPump(0, 1);">On</button>
+                            <button class="btn btn-danger" onclick="setPump(0, 0);">Off</button>
                         </li>
-                        <li class="list-group-item"><strong>Pomp 2 </strong> <button class="btn btn-success">On</button>
-                            <button class="btn btn-danger">Off</button>
+                        <li class="list-group-item"><strong>Pomp 2 </strong> <button class="btn btn-success" onclick="setPump(1, 1);">On</button>
+                            <button class="btn btn-danger" onclick="setPump(1, 0);">Off</button>
                         </li>
-                        <li class="list-group-item"><strong>Pomp 3 </strong> <button class="btn btn-success">On</button>
-                            <button class="btn btn-danger">Off</button>
+                        <li class="list-group-item"><strong>Pomp 3 </strong> <button class="btn btn-success" onclick="setPump(2, 1);">On</button>
+                            <button class="btn btn-danger" onclick="setPump(2, 0);">Off</button>
                         </li>
-                        <li class="list-group-item"><strong>Pomp 4 </strong> <button class="btn btn-success">On</button>
-                            <button class="btn btn-danger">Off</button>
+                        <li class="list-group-item"><strong>Pomp 4 </strong> <button class="btn btn-success" onclick="setPump(3, 1);">On</button>
+                            <button class="btn btn-danger" onclick="setPump(3, 0);">Off</button>
                         </li>
                     </ul>
                 </div>
@@ -69,13 +69,14 @@
                         <li class="list-group-item"><strong>Weegschaal: </strong><span id="ScaleData"></span> </li>
                         <li class="list-group-item"><strong>Machine staat: </strong><span
                                 id="CurrentMachineState"></span> </li>
-                        <li class="list-group-item"><strong>Uptime: </strong><span id="Uptime"> s</span>
+                        <li class="list-group-item"><strong>Uptime: </strong><span id="Uptime"> </span> s
                         </li>
                         <li class="list-group-item">
                             <h4>Laatste verzoek</h4>
                         </li>
                         <li class="list-group-item"><strong>Smaak: </strong><span id="LemonadeFlavour"></span> </li>
-                        <li class="list-group-item"><strong>Zoetheid: </strong><span id="LemonadeSweetness"></span> </li>
+                        <li class="list-group-item"><strong>Zoetheid: </strong><span id="LemonadeSweetness"></span>
+                        </li>
                     </ul>
                 </div>
             </div>
@@ -108,6 +109,25 @@
     window.onload = function () {
         setValues();
     };
+
+
+    function setPump(pump, state) {
+        var sweetness;
+
+        console.log("Setting pump " + pump + " to " + state);
+        var req = new XMLHttpRequest();
+        var url;
+        if (state == 1)
+            url = "/api/setPumpHigh?pump=".concat(pump);
+        else
+            url = "/api/setPumpLow?pump=".concat(pump);
+        req.open("GET", url, false);
+        req.send(null);
+        if (req.status == 200) console.log(req.responseText);
+        if (req.responseText == "OK") {
+            alert("Pomp " + (pump + 1) + " is nu " + state);
+        }
+    }
 </script>
 
 </html>
