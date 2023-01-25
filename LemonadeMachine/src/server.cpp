@@ -9,11 +9,11 @@ void serverInit()
     server.on("/", HTTP_GET, [](AsyncWebServerRequest *request)
               { request->send(SPIFFS, "/index.html", "text/html"); });
 
+    server.on("/Controle", HTTP_GET, [](AsyncWebServerRequest *request)
+              { request->send(SPIFFS, "/control.html", "text/html"); });
+
     server.on("/gatherData.js", HTTP_GET, [](AsyncWebServerRequest *request)
               { request->send(SPIFFS, "/gatherData.js", "text/JavaScript"); });
-
-    // server.on("/api/machineState", HTTP_GET, [](AsyncWebServerRequest *request)
-    //           { request->send(200, "text/plain", String(lemonadeState)); });  TODO: get state from lemonade.cpp
 
     server.on("/api/scaleValue", HTTP_GET, [](AsyncWebServerRequest *request)
               { char str[7];
@@ -28,6 +28,22 @@ void serverInit()
                 } else {
                     request->send(200, "text/plain", "Not OK");
                 } });
+
+    // ------ Control
+    server.on("/api/CurrentMachineState", HTTP_GET, [](AsyncWebServerRequest *request)
+              { request->send(200, "text/plain", getLemonadeState()); });
+
+    server.on("/api/ScaleData", HTTP_GET, [](AsyncWebServerRequest *request)
+              { request->send(200, "text/plain", String(getCurrentWeight())); });
+
+    server.on("/api/Uptime", HTTP_GET, [](AsyncWebServerRequest *request)
+              { request->send(200, "text/plain", String(millis() / 1000)); });
+
+    server.on("/api/LemonadeFlavour", HTTP_GET, [](AsyncWebServerRequest *request)
+              { request->send(200, "text/plain", getLemonadeFlavour()); });
+
+    server.on("/api/LemonadeSweetness", HTTP_GET, [](AsyncWebServerRequest *request)
+              { request->send(200, "text/plain", String(getSweetnessAmount() * 100)); });
 
     server.begin();
 }

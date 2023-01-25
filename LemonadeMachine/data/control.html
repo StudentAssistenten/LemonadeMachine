@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+
+<head lang="nl">
+    <title>ESA - Limonade machine</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css"
+        integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
+    <link rel="shortcut icon"
+        href="https://d36rz30b5p7lsd.cloudfront.net/587/studio/assets/v1565179691401_1648819593/favicon-karvancevitam.png">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3"
+        crossorigin="anonymous"></script>
+    <script src="/gatherData.js"></script>
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg bg-warning">
+        <div class="container">
+            <a class="navbar-brand" href="#"><strong>Limonade - Controle</strong></a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" aria-current="page" href="/">Dashboard</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="/Controle">Controle</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <div class="container">
+        <h1 class="text-center">Controle</h1>
+
+        <div class="row">
+            <div class="col-sm">
+                <div class="card">
+                    <ul class="list-group">
+                        <li class="list-group-item">
+                            <h3>Pomp controle</h3>
+                        </li>
+                        <li class="list-group-item"><strong>Pomp 1 </strong> <button class="btn btn-success">On</button>
+                            <button class="btn btn-danger">Off</button>
+                        </li>
+                        <li class="list-group-item"><strong>Pomp 2 </strong> <button class="btn btn-success">On</button>
+                            <button class="btn btn-danger">Off</button>
+                        </li>
+                        <li class="list-group-item"><strong>Pomp 3 </strong> <button class="btn btn-success">On</button>
+                            <button class="btn btn-danger">Off</button>
+                        </li>
+                        <li class="list-group-item"><strong>Pomp 4 </strong> <button class="btn btn-success">On</button>
+                            <button class="btn btn-danger">Off</button>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-sm">
+                <div class="card">
+                    <ul class="list-group">
+                        <li class="list-group-item">
+                            <h3>Data</h3>
+                        </li>
+                        <li class="list-group-item"><strong>Weegschaal: </strong><span id="ScaleData"></span> </li>
+                        <li class="list-group-item"><strong>Machine staat: </strong><span
+                                id="CurrentMachineState"></span> </li>
+                        <li class="list-group-item"><strong>Uptime: </strong><span id="Uptime"> s</span>
+                        </li>
+                        <li class="list-group-item">
+                            <h4>Laatste verzoek</h4>
+                        </li>
+                        <li class="list-group-item"><strong>Smaak: </strong><span id="LemonadeFlavour"></span> </li>
+                        <li class="list-group-item"><strong>Zoetheid: </strong><span id="LemonadeSweetness"></span> </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</body>
+<script>
+    function setValues() {
+        console.log("Getting values");
+
+        setValue("ScaleData");
+        setValue("CurrentMachineState");
+        setValue("Uptime");
+        setValue("LemonadeFlavour");
+        setValue("LemonadeSweetness");
+
+        console.log("Setting values");
+    }
+
+    function setValue(valueName) {
+        let data = document.getElementById(valueName);
+        var req = new XMLHttpRequest();
+        let url = "/api/".concat(valueName);
+        req.open("GET", url, false);
+        req.send(null);
+        if (req.status == 200) data.textContent = req.responseText;
+    }
+
+    window.onload = function () {
+        setValues();
+    };
+</script>
+
+</html>

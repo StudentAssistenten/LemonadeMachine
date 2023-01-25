@@ -28,4 +28,9 @@ void queueLemonade(AsyncWebServerRequest *request);
 void handleLemonadeMachine();
 void lemonadeInit();
 
+float getSweetnessAmount();
+float getCurrentWeight();
+String getLemonadeFlavour();
+String getLemonadeState();
+
 #endif

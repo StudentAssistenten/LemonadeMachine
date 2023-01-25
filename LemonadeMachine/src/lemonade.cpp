@@ -2,11 +2,62 @@
 
 lemonadeState_t lemonadeState = IDLE;
 lemonadeFlavour_t lemonadeFlavour = LEMON;
-float sweetenesAmount = 0.0;
+float sweetnessAmount = 0.0;
 float currentWeight = 0;
 
 #define BASE_SWEETNESS 0.014
 #define TOTAL_LIQUID 0.130
+
+float getSweetnessAmount()
+{
+    return sweetnessAmount;
+}
+
+float getCurrentWeight()
+{
+    return currentWeight;
+}
+
+String getLemonadeFlavour()
+{
+    switch (lemonadeFlavour)
+    {
+    case LEMON:
+        return "LEMON";
+        break;
+    case STRAWBERRIE:
+        return "STRAWBERRIE";
+        break;
+    case BOSVRUCHTEN:
+        return "BOSVRUCHTEN";
+        break;
+    default:
+        return "UNKNOWN";
+        break;
+    }
+}
+
+String getLemonadeState()
+{
+    switch (lemonadeState)
+    {
+    case IDLE:
+        return "IDLE";
+        break;
+    case FLAVORING:
+        return "FLAVORING";
+        break;
+    case WATERING:
+        return "WATERING";
+        break;
+    case QUEUED:
+        return "QUEUED";
+        break;
+    default:
+        return "UNKNOWN";
+        break;
+    }
+}
 
 void handleLemonadeMachine()
 {
@@ -20,9 +71,11 @@ void handleLemonadeMachine()
     }
     else if (lemonadeState == FLAVORING)
     {
+#ifdef DEBUG_LEMONADE
         Serial.print("Flavoring: ");
         Serial.println(currentWeight);
-        if (currentWeight > 0.014) // TODO: make this value dependant of site input (0.007 is ideal sweetness)
+#endif
+        if (currentWeight > sweetnessAmount)
         {
             lemonadeState = WATERING;
             digitalWrite(RELAIS_OFFSET + lemonadeFlavour, LOW);
@@ -32,9 +85,11 @@ void handleLemonadeMachine()
     }
     else if (lemonadeState == WATERING)
     {
+#ifdef DEBUG_LEMONADE
         Serial.print("Watering: ");
         Serial.println(currentWeight);
-        if (currentWeight > (TOTAL_LIQUID)) // TODO: make this value dependant of site input
+#endif
+        if (currentWeight > (TOTAL_LIQUID))
         {
             lemonadeState = IDLE;
             digitalWrite(WATER_PUMP, LOW);
@@ -49,8 +104,8 @@ void queueLemonade(AsyncWebServerRequest *request)
     {
         lemonadeState = QUEUED;
         lemonadeFlavour = (lemonadeFlavour_t)request->getParam("lemonade")->value().toInt();
-        sweetenesAmount = BASE_SWEETNESS * request->getParam("sweetness")->value().toFloat();
-        Serial.printf("Lemonade type %d queued, sweetness : %f", (uint8_t) lemonadeFlavour, sweetenesAmount);
+        sweetnessAmount = BASE_SWEETNESS * request->getParam("sweetness")->value().toFloat();
+        Serial.printf("Lemonade type %d queued, sweetness : %f", (uint8_t)lemonadeFlavour, sweetnessAmount);
     }
 }
 

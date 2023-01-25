@@ -15,6 +15,7 @@ void loop()
 void BSPInit()
 {
   Serial.begin(115200);
+  scaleInit();
   lemonadeInit();
   RGBLedInit();
   if (!SPIFFS.begin())

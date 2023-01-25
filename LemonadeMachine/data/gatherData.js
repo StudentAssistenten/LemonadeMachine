@@ -1,23 +1,10 @@
 console.log("test");
 
-function setValues() {
-  console.log("Getting values");
-  // setValue("machineState");
-  console.log("Setting values");
-}
+
 
 function feedback() // Todo: make better function
 {
   alert("Uw limonade wordt gemaakt!");
-}
-
-function setValue(valueName) {
-  let data = document.getElementById(valueName);
-  var req = new XMLHttpRequest();
-  let url = "/api/".concat(valueName);
-  req.open("GET", url, false);
-  req.send(null);
-  if (req.status == 200) data.textContent = req.responseText;
 }
 
 function makeLemonadeRequest(type)
@@ -41,9 +28,6 @@ function makeLemonadeRequest(type)
   }
 }
 
-window.onload = function () {
-  setValues();
-};
 
 function randomNumber(min, max) { 
   return Math.random() * (max - min) + min;
