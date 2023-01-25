@@ -104,7 +104,7 @@ void queueLemonade(AsyncWebServerRequest *request)
     {
         lemonadeState = QUEUED;
         lemonadeFlavour = (lemonadeFlavour_t)request->getParam("lemonade")->value().toInt();
-        sweetnessAmount = BASE_SWEETNESS * request->getParam("sweetness")->value().toFloat();
+        sweetnessAmount = BASE_SWEETNESS * request->getParam("sweetness")->value().toFloat() + 0.004;
         Serial.printf("Lemonade type %d queued, sweetness : %f", (uint8_t)lemonadeFlavour, sweetnessAmount);
     }
 }
