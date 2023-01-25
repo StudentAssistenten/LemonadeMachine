@@ -4,6 +4,8 @@ lemonadeState_t lemonadeState = IDLE;
 lemonadeFlavour_t lemonadeFlavour = LEMON;
 float sweetnessAmount = 0.0;
 float currentWeight = 0;
+lemonadeFlavour_t secondFlavour = LEMON;
+bool twoFlavours = false;
 
 #define BASE_SWEETNESS 0.014
 #define TOTAL_LIQUID 0.130
@@ -75,12 +77,30 @@ void handleLemonadeMachine()
         Serial.print("Flavoring: ");
         Serial.println(currentWeight);
 #endif
-        if (currentWeight > sweetnessAmount)
+        if (twoFlavours)
         {
-            lemonadeState = WATERING;
-            digitalWrite(RELAIS_OFFSET + lemonadeFlavour, LOW);
-            digitalWrite(WATER_PUMP, HIGH);
-            colorRGB(BLUE);
+            if (currentWeight > (BASE_SWEETNESS + 0.004))
+            {
+                digitalWrite(RELAIS_OFFSET + secondFlavour, LOW);
+                lemonadeState = WATERING;
+                colorRGB(BLUE);
+                digitalWrite(WATER_PUMP, HIGH);
+            }
+            else if (currentWeight > (BASE_SWEETNESS + 0.004) / 2)
+            {
+                digitalWrite(RELAIS_OFFSET + lemonadeFlavour, LOW);
+                digitalWrite(RELAIS_OFFSET + secondFlavour, HIGH);
+            }
+        }
+        else
+        {
+            if (currentWeight > sweetnessAmount)
+            {
+                lemonadeState = WATERING;
+                digitalWrite(RELAIS_OFFSET + lemonadeFlavour, LOW);
+                digitalWrite(WATER_PUMP, HIGH);
+                colorRGB(BLUE);
+            }
         }
     }
     else if (lemonadeState == WATERING)
@@ -100,12 +120,28 @@ void handleLemonadeMachine()
 
 void queueLemonade(AsyncWebServerRequest *request)
 {
+    Serial.println("Queueing lemonade");
     if (lemonadeState == IDLE)
     {
         lemonadeState = QUEUED;
         lemonadeFlavour = (lemonadeFlavour_t)request->getParam("lemonade")->value().toInt();
-        sweetnessAmount = BASE_SWEETNESS * request->getParam("sweetness")->value().toFloat() + 0.004;
+        if (request->hasParam("secondFlavour"))
+        {
+            Serial.println("Two flavours");	
+            secondFlavour = (lemonadeFlavour_t)request->getParam("secondFlavour")->value().toInt();
+            twoFlavours = true;
+        }
+        else
+        {
+            sweetnessAmount = BASE_SWEETNESS * request->getParam("sweetness")->value().toFloat() + 0.004;
+            twoFlavours = false;
+        }
         Serial.printf("Lemonade type %d queued, sweetness : %f", (uint8_t)lemonadeFlavour, sweetnessAmount);
+        if (twoFlavours)
+        {
+            Serial.printf(" with second flavour %d", (uint8_t)secondFlavour);
+        }
+        Serial.printf("\n");
     }
 }
 
