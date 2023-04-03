@@ -3,7 +3,7 @@ ESP32 LemonadeMachine
 
 Dit project wordt via platform IO op een ESP32 gezet. Eerst moeten de html files op de ESP gezet worden. Dit kan ook via platformIO. Er moet geklik worden op Upload Filesystem Image OTA. Er wordt op de website gebruik gemaakt van images van de carvan cervitan site. Hiervoor is het belangrijk dat het WiFI netwerk waar de ESP meer verbind daarwerkelijk internet heeft. Een mobiele hotspot kan hier goed voor gebruikt worden.
 
-De image bij "2 smaken" en "random smaak" is een zelfgemaakte image. Hiervoor is een link gebruik die overtijd verloop. De foto moet opnieuw geupload worden en dan kan deze link gebruikt worden. De betreffende foto staat in de Repo.
+De image bij "2 smaken" en "random smaak" is een zelfgemaakte image. Hiervoor is een link gebruik die overtijd verloop. De foto moet opnieuw geupload worden en dan kan deze link gebruikt worden. De betreffende foto staat in de Repo. Het gaat om de foto "RandomCarvan.png" deze wordt gebruikt voor beide opties. 
 
 # Setup
 1. Pas in de code de inlog gegvens aan naar je eigen hotspot(WiFiSetup.h)
