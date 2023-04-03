@@ -55,7 +55,7 @@
                             </div>
                         </div>
                         <input type="range" id="lemonadeSweetness0" step="0.1" class="form-range" min="0" max="1">
-                        <button onclick="makeLemonadeRequest(0);" class="btn btn-warning">Maak limonade</button>
+                        <button onclick="makeLemonadeRequest(0, 1, 0);" class="btn btn-warning">Maak limonade</button>
                     </div>
                 </div>
             </div>
@@ -77,7 +77,7 @@
                             </div>
                         </div>
                         <input type="range" id="lemonadeSweetness1" step="0.1" class="form-range" min="0" max="1">
-                        <button  onclick="makeLemonadeRequest(1);" class="btn btn-danger">Maak limonade</button>
+                        <button  onclick="makeLemonadeRequest(1, 1, 0);" class="btn btn-danger">Maak limonade</button>
                     </div>
                 </div>
             </div>
@@ -99,7 +99,7 @@
                             </div>
                         </div>
                         <input type="range" id="lemonadeSweetness2" step="0.1" class="form-range" min="0" max="1">
-                        <button onclick="makeLemonadeRequest(2)" class="btn btn-primary">Maak limonade</button>
+                        <button onclick="makeLemonadeRequest(2, 1, 0)" class="btn btn-primary">Maak limonade</button>
                     </div>
                 </div>
             </div>
@@ -112,14 +112,34 @@
                         class="card-img-top">
                     <div class="card-body">
                         <h5 class="card-title">Willekeurige keuze</h5>
-                        <button onclick="makeLemonadeRequest(3);" class="btn btn-warning">Maak limonade</button>
+                        <button onclick="makeLemonadeRequest(3, 1, 0);" class="btn btn-warning">Maak limonade</button>
                     </div>
                 </div>
             </div>
             <div class="col-sm mt-3">
+                <div class="card">
+                    <img src="https://lh3.googleusercontent.com/u/0/drive-viewer/AFDK6gPolg35TpbcQ4WplnXGkCryIGAlPSHvivocDWsXg560nsk3XF6I-4dinpaKYydlnuBwyFXMMP_j53aaSnV9ALyUrlQoCw=w1960-h3486"
+                        class="card-img-top">
+                    <div class="card-body">
+                        <h5 class="card-title">Mix smaken</h5>
+                        <select class="form-select" id="firstFlavour">
+                            <option value="0">Citroen</option>
+                            <option value="1">Aardbei</option>
+                            <option value="2">Bosvruchten</option>
+                        </select>
+                        <select class="form-select" id="secondFlavour">
+                            <option value="0">Citroen</option>
+                            <option value="1">Aardbei</option>
+                            <option value="2">Bosvruchten</option>
+                        </select>
+                        <br/>
+                        <button onclick="makeMixRequest();" class="btn btn-success">Maak limonade</button>
+                    </div>
+                </div>
             </div>
             <div class="col-sm mt-3"></div>
         </div>
+        
     </div>
 </body>
 
